@@ -1,4 +1,4 @@
-[ ] redo node types to be loaded from json or smth
-[ ] resizable nodes
-[ ] spark node: emits sparks when its hit
-[ ] traverse nodes and like make them transparent if they're not doing anything
+[ ] redo gadget types to be loaded from json or smth
+[x] resizable gadgets
+[ ] spark gadget: emits sparks when its hit
+[ ] traverse gadgets and like make them transparent if they're not doing anything

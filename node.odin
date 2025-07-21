@@ -1,35 +1,42 @@
 package main
 import rl "vendor:raylib"
 
-Node :: struct {
+Gadget :: struct {
     x:int,
     y:int,
     w:int,
     h:int,
-    // color:rl.Color,
-    type:NodeType,
+    type:GadgetType,
 }
 
-NodeType :: enum {
+GadgetOutputType :: enum {
+    Nothing,
+    String,
+}
+
+GadgetType :: enum {
     Label,
     Ping,
     Conclusion,
+    Chain,
 }
 
-node_type_name :: proc(type:NodeType) -> string {
+gadget_type_name :: proc(type:GadgetType) -> string {
     switch type {
         case .Label: return "Label"
         case .Ping: return "Ping"
         case .Conclusion: return "Conclusion"
+        case .Chain: return "Chain"
     }
     return "!NOTHING!"
 }
 
-node_type_color :: proc(type:NodeType) -> rl.Color {
+gadget_type_color :: proc(type:GadgetType) -> rl.Color {
     switch type {
         case .Label: return rl.BLUE
         case .Ping: return rl.ORANGE
         case .Conclusion: return rl.WHITE
+        case .Chain: return rl.GRAY
     }
     return rl.GRAY
 }

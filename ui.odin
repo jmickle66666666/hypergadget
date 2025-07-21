@@ -1,11 +1,20 @@
 package main
 import rl "vendor:raylib"
 
-UI_MENU_SPACING :: 13
+UI_MENU_SPACING :: 12
 
 ui_hovered_timer :int= 0
 
+ButtonCommand :: struct {
+    x:int,
+    y:int,
+    label:string
+}
+ui_button_commands : [dynamic]ButtonCommand
+
 button :: proc(x:int, y:int, label:string) -> bool {
+    append(&ui_button_commands, (ButtonCommand){x, y, label})
+
     x :i32= i32(x)
     y :i32= i32(y)
     w := get_text_width(label) + 12
@@ -14,9 +23,24 @@ button :: proc(x:int, y:int, label:string) -> bool {
     impos :[2]i32= {i32(mouse_position().x), i32(mouse_position().y)}
     hovered := impos.x >= x && impos.x < x+w && impos.y >= y && impos.y < y+h 
     if hovered { 
-        ui_hovered_timer = 3 
-        clear(&selection)
+        mouse_type = .UI
     }
+
+    if hovered && rl.IsMouseButtonPressed(.LEFT) {
+        return true
+    }
+
+    return false
+}
+
+button_render :: proc(x:int, y:int, label:string) {
+    x :i32= i32(x)
+    y :i32= i32(y)
+    w := get_text_width(label) + 12
+    h := i32(font_size + 12)
+
+    impos :[2]i32= {i32(mouse_position().x), i32(mouse_position().y)}
+    hovered := impos.x >= x && impos.x < x+w && impos.y >= y && impos.y < y+h 
 
     if hovered && !rl.IsMouseButtonDown(.LEFT) {
         rl.DrawRectangle(camera.x + x, camera.y + y, w, h, rl.WHITE)
@@ -27,12 +51,6 @@ button :: proc(x:int, y:int, label:string) -> bool {
         draw_rectangle(camera.x + x, camera.y + y, w, h, rl.WHITE)
         draw_text(label, camera.x + x + 7, camera.y + y + 7, rl.WHITE)
     }
-
-    if hovered && rl.IsMouseButtonPressed(.LEFT) {
-        return true
-    }
-
-    return false
 }
 
 Menu :: struct {
@@ -62,7 +80,9 @@ ui_menu_add :: proc(label:string, onclick : proc()) {
     append(&ui_menu.items, (MenuItem){label, onclick})
 }
 
-ui_menu_render :: proc() {
+ui_update :: proc() {
+    clear(&ui_button_commands)
+
     hit_any := false
     for item, i in ui_menu.items {
         if button(ui_menu.x, ui_menu.y + i * (UI_MENU_SPACING + font_size), item.label) {
@@ -80,7 +100,6 @@ ui_hovered :: proc() -> bool {
 }
 
 ui_render :: proc() {
-    ui_menu_render()
 
     y := SCREEN_HEIGHT - font_size
     for &toast in ui_toast_list {
@@ -90,6 +109,10 @@ ui_render :: proc() {
             draw_text(toast.message, SCREEN_WIDTH - get_text_width(toast.message), i32(y-1), rl.WHITE)
             y -= font_size
         }
+    }
+
+    for button_command in ui_button_commands {
+        button_render(button_command.x, button_command.y, button_command.label)
     }
 }
 

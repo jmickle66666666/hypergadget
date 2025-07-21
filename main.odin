@@ -4,7 +4,7 @@ import rl "vendor:raylib"
 import "settings"
 import "core:mem"
 
-node_list : [dynamic]Node
+gadget_list : [dynamic]Gadget
 grid_size := font_size
 DEBUG_MODE := true
 
@@ -29,7 +29,7 @@ init :: proc () {
     
     rl.InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "hypergadget")
 
-    // load_font("font.png")
+    mouse_texture = rl.LoadTexture("mouse.png")
 
     rl.SetTargetFPS(60)
 
@@ -41,6 +41,8 @@ init :: proc () {
         "fonts/XanhMono-Regular.ttf",
     )
     font_size_change(0)
+
+    rl.HideCursor()
 
     for !rl.WindowShouldClose() {
         time += 1
@@ -57,26 +59,32 @@ init :: proc () {
             impos :[2]int= mouse_position()
             ui_menu_start(impos.x+4, impos.y+4)
 
-            ui_menu_add("Add Node", proc() {
+            ui_menu_add("Add Gadget", proc() {
                 impos :[2]int= mouse_position()
                 ui_menu_start(impos.x+4, impos.y+4)
 
                 ui_menu_add("Label", proc() {
                     ui_menu_clear()
                     impos :[2]int= mouse_position()
-                    append(&node_list, (Node){impos.x / grid_size, impos.y / grid_size, 4, 1, .Label})
+                    append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 4, 1, .Label})
                 })
 
                 ui_menu_add("Ping", proc() {
                     ui_menu_clear()
                     impos :[2]int= mouse_position()
-                    append(&node_list, (Node){impos.x / grid_size, impos.y / grid_size, 3, 1, .Ping})
+                    append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 3, 1, .Ping})
                 })
 
                 ui_menu_add("Conclusion", proc() {
                     ui_menu_clear()
                     impos :[2]int= mouse_position()
-                    append(&node_list, (Node){impos.x / grid_size, impos.y / grid_size, 6, 1, .Conclusion})
+                    append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 6, 1, .Conclusion})
+                })
+
+                ui_menu_add("Chain", proc() {
+                    ui_menu_clear()
+                    impos :[2]int= mouse_position()
+                    append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 2, 1, .Chain})
                 })
 
             })
@@ -91,12 +99,20 @@ init :: proc () {
             })
         }
 
+        if !rl.IsMouseButtonDown(.LEFT) {
+            mouse_type = .None
+            selection_mousecheck()
+            resize_mousecheck()
+        }
+
+        ui_update()
         selection_update()
-    
+        resize_update()
         render()
         ui_render()
         debug_update()
         debug_draw()
+        mouse_render()
 
         rl.EndDrawing()
     }

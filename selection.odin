@@ -3,24 +3,42 @@ import rl "vendor:raylib"
 import "core:fmt"
 import "core:slice"
 
-selection_hovered : ^Node 
-selection : [dynamic]^Node
+selection_hovered : ^Gadget 
+selection : [dynamic]^Gadget
 
-selection_clicknode : ^Node
+selection_clickgadget : ^Gadget
 
 selection_click_start : [2]int
 selection_move : [2]int
 
 selection_drawing_box : bool
 
+selection_mousecheck :: proc() {
+    if mouse_type == .None {
+        mouse_type = .Select
+    }
+
+    if mouse_type == .Select {
+        if selection_hovered != nil {
+            mouse_type = .Moving
+        }
+    }
+}
+
 selection_update :: proc() {
-    if ui_hovered() { selection_drawing_box=false; return }
+    if mouse_type != .Select && mouse_type != .Moving { 
+        if rl.IsMouseButtonPressed(.LEFT) {
+            selection_drawing_box = false
+            clear(&selection)
+        }
+        return 
+    }
     impos :[2]int= mouse_position()
     selection_hovered = nil
-    for &node in node_list {
-        if node.x * grid_size <= impos.x && node.y * grid_size <= impos.y &&
-           (node.x + node.w) * grid_size > impos.x && (node.y + node.h) * grid_size > impos.y {
-            selection_hovered = &node
+    for &gadget in gadget_list {
+        if gadget.x * grid_size <= impos.x && gadget.y * grid_size <= impos.y &&
+           (gadget.x + gadget.w) * grid_size > impos.x && (gadget.y + gadget.h) * grid_size > impos.y {
+            selection_hovered = &gadget
             break
         }
     }
@@ -38,7 +56,7 @@ selection_update :: proc() {
             }
         }
 
-        selection_clicknode = selection_hovered
+        selection_clickgadget = selection_hovered
         selection_click_start = {impos.x, impos.y}
     }
 
@@ -55,33 +73,33 @@ selection_update :: proc() {
             y1 := min(impos.y, selection_click_start.y)
             y2 := max(impos.y, selection_click_start.y)
 
-            for &node in node_list {
-                if selection_contains(&node) { continue }
-                if node.x * grid_size > x1 && node.x * grid_size < x2 - node.w * grid_size &&
-                   node.y * grid_size > y1 && node.y * grid_size < y2 - node.h * grid_size {
-                    append(&selection, &node)
+            for &gadget in gadget_list {
+                if selection_contains(&gadget) { continue }
+                if gadget.x * grid_size > x1 && gadget.x * grid_size < x2 - gadget.w * grid_size &&
+                   gadget.y * grid_size > y1 && gadget.y * grid_size < y2 - gadget.h * grid_size {
+                    append(&selection, &gadget)
                 }
             }
         } else {
-            for &node in selection {
-                node.x += selection_move.x / grid_size
-                node.y += selection_move.y / grid_size
+            for &gadget in selection {
+                gadget.x += selection_move.x / grid_size
+                gadget.y += selection_move.y / grid_size
             }
         }
     }
 
     if rl.IsKeyPressed(.DELETE) {
-        for node in selection {
-            i, found := slice.linear_search(node_list[:], node^)
-            unordered_remove(&node_list, i)
+        for gadget in selection {
+            i, found := slice.linear_search(gadget_list[:], gadget^)
+            unordered_remove(&gadget_list, i)
         }
         clear(&selection)
     }
 }
 
-selection_contains :: proc(node:^Node) -> bool {
-    for &selected_node in selection {
-        if node == selected_node {
+selection_contains :: proc(gadget:^Gadget) -> bool {
+    for &selected_gadget in selection {
+        if gadget == selected_gadget {
             return true
         }
     }
