@@ -1,5 +1,6 @@
 package main
 import rl "vendor:raylib"
+import "core:slice"
 
 camera :[2]i32
 
@@ -81,14 +82,18 @@ render :: proc() {
             )
         }
     }
-    for gadget in gadget_list {
+    for &gadget in gadget_list {
+        alpha :f32= 0.8
+        if !slice.contains(solve_queue[:], &gadget) {
+            alpha = 0.2
+        }
         rl.DrawRectangleGradientV(
             camera.x + i32(gadget.x * grid_size)-1, 
             camera.y + i32(gadget.y * grid_size), 
             max(i32(gadget.w * grid_size), get_text_width(gadget_type_name(gadget.type))),
             i32(gadget.h * grid_size),
-            rl.ColorAlpha(gadget_type_color(gadget.type), 0.8), 
-            rl.ColorAlpha(rl.ColorBrightness(gadget_type_color(gadget.type), -0.25), 0.8)
+            rl.ColorAlpha(gadget_type_color(gadget.type), alpha), 
+            rl.ColorAlpha(rl.ColorBrightness(gadget_type_color(gadget.type), -0.25), alpha)
         )
 
         draw_text(
@@ -96,6 +101,16 @@ render :: proc() {
             camera.x + i32(gadget.x * grid_size)+2,
             camera.y + i32(gadget.y * grid_size)+2, 
             rl.BLACK
+        )
+
+        outline_pos :i32= -2
+
+        draw_rectangle(
+            camera.x + i32((gadget.x + gadget.w - 1) * grid_size) - outline_pos, 
+            camera.y + i32((gadget.y + gadget.h - 1) * grid_size) - outline_pos, 
+            -1+i32(grid_size) + outline_pos*2,
+            -1+i32(grid_size) + outline_pos*2,
+            rl.ColorAlpha(rl.BLACK, 0.3)
         )
     }
 

@@ -33,4 +33,8 @@ resize_update :: proc() {
         new_pos := max(resize_gadget.x + 1, tmpos.x)
         resize_gadget.w = 1 + new_pos - resize_gadget.x
     }
+
+    if rl.IsMouseButtonReleased(.LEFT) {
+        solve_build_queue()
+    }
 }

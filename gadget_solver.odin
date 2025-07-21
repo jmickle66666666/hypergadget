@@ -11,6 +11,19 @@ solve_traverse :: proc() {
     // step 4: solve the newest added gadget on the queue
     // step 5: which means do step 2 on it
 
+    for len(solve_queue) > 0 {
+        queue_index := len(solve_queue)-1
+        solve_process_gadget(solve_queue[queue_index])
+        ordered_remove(&solve_queue, queue_index)
+    }
+
+    // we build the queue after any action that would change it
+    // so it should be already built before we run the solver
+    // meaning we can skip doing it beforehand, then repopulate it after
+    solve_build_queue()
+}
+
+solve_build_queue :: proc() {
     clear(&solve_queue)
     conclusions := solve_find_gadgets_of_type(.Conclusion)
     defer delete(conclusions)
@@ -18,14 +31,6 @@ solve_traverse :: proc() {
         append(&solve_queue, conclusion)
     }
 
-    for len(solve_queue) > 0 {
-        queue_index := len(solve_queue)-1
-        solve_traverse_gadget(queue_index)
-        ordered_remove(&solve_queue, queue_index)
-    }
-}
-
-solve_build_queue :: proc(queue_index:int) {
     for i:=0; i < len(solve_queue); i += 1 {
         solve_traverse_gadget(i)
     }
@@ -36,7 +41,6 @@ solve_traverse_gadget :: proc(queue_index:int) {
     switch gadget.type {
         case .Label:
         case .Ping:
-            toast("Ping!")
         case .Conclusion:
             inputs := solve_find_inputs(gadget)
             defer delete(inputs)

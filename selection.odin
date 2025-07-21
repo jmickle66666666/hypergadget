@@ -86,6 +86,8 @@ selection_update :: proc() {
                 gadget.x += tmov.x
                 gadget.y += tmov.y
             }
+
+            solve_build_queue()
         }
     }
 

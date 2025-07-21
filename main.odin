@@ -68,24 +68,28 @@ init :: proc () {
                     ui_menu_clear()
                     impos :[2]int= mouse_position()
                     append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 4, 1, .Label})
+                    solve_build_queue()
                 })
 
                 ui_menu_add("Ping", proc() {
                     ui_menu_clear()
                     impos :[2]int= mouse_position()
                     append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 3, 1, .Ping})
+                    solve_build_queue()
                 })
 
                 ui_menu_add("Conclusion", proc() {
                     ui_menu_clear()
                     impos :[2]int= mouse_position()
                     append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 6, 1, .Conclusion})
+                    solve_build_queue()
                 })
 
                 ui_menu_add("Chain", proc() {
                     ui_menu_clear()
                     impos :[2]int= mouse_position()
                     append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 2, 1, .Chain})
+                    solve_build_queue()
                 })
 
             })
