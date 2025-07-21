@@ -3,6 +3,7 @@ import "core:fmt"
 import rl "vendor:raylib"
 import "settings"
 import "core:mem"
+import "core:math"
 
 gadget_list : [dynamic]Gadget
 grid_size := font_size
@@ -129,7 +130,10 @@ mouse_position :: proc() -> [2]int {
     mpos :[2]f32= rl.GetMousePosition()
     mpos.x -= f32(camera.x)
     mpos.y -= f32(camera.y)
-    return {int(mpos.x), int(mpos.y)}
+    // dont ask
+    // if mpos.x < 0 { mpos.x += 1.0 }
+    // if mpos.y < 0 { mpos.y += 1.0 }
+    return {int(math.round(mpos.x)), int(math.round(mpos.y))}
 }
 
 mouse_screen_position :: proc() -> [2]int {

@@ -81,9 +81,10 @@ selection_update :: proc() {
                 }
             }
         } else {
+            tmov := selection_move / grid_size
             for &gadget in selection {
-                gadget.x += selection_move.x / grid_size
-                gadget.y += selection_move.y / grid_size
+                gadget.x += tmov.x
+                gadget.y += tmov.y
             }
         }
     }

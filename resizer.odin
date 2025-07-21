@@ -5,6 +5,8 @@ import "core:fmt"
 resize_mousecheck :: proc() {
     impos :[2]int= mouse_position()
     tmpos :[2]int = impos / grid_size
+    if impos.x < 0 { tmpos.x -= 1 }
+    if impos.y < 0 { tmpos.y -= 1 }
 
     for &gadget in gadget_list {
         if gadget.x + gadget.w == tmpos.x + 1 && gadget.y + gadget.h == tmpos.y + 1 {
