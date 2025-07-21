@@ -1,0 +1,2 @@
+window_x 2715
+window_y 269
