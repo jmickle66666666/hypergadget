@@ -1,4 +1,5 @@
 [ ] redo gadget types to be loaded from json or smth
 [x] resizable gadgets
 [ ] spark gadget: emits sparks when its hit
-[ ] traverse gadgets and like make them transparent if they're not doing anything
+[x] traverse gadgets and like make them transparent if they're not doing anything
+[ ] for some reason it all looks different on my laptop??? hate that
