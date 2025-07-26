@@ -2,7 +2,7 @@
 [x] resizable gadgets
 [x] traverse gadgets and like make them transparent if they're not doing anything
 [ ] for some reason it all looks different on my laptop??? hate that
-[ ] node guid for filepaths
+[x] node guid
 [ ] file saving/loading/cleanup system
 [ ] gadget data
 [ ] string data
@@ -13,3 +13,6 @@ gadgets:
 [ ] random input gadget
 [ ] spark gadget: emits sparks when its hit
 [ ] transmute gadget
+
+bugs:
+[x] release gadget drag while hovering over a resize thing cancels the move

@@ -61,7 +61,7 @@ Menu :: struct {
 
 MenuItem :: struct {
     label:string,
-    onclick : proc()
+    onclick : proc(),
 }
 
 ui_menu :Menu = {}

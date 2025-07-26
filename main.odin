@@ -5,7 +5,6 @@ import "settings"
 import "core:mem"
 import "core:math"
 
-gadget_list : [dynamic]Gadget
 grid_size := font_size
 DEBUG_MODE := true
 
@@ -61,37 +60,14 @@ init :: proc () {
             ui_menu_start(impos.x+4, impos.y+4)
 
             ui_menu_add("Add Gadget", proc() {
-                impos :[2]int= mouse_position()
-                ui_menu_start(impos.x+4, impos.y+4)
-
-                ui_menu_add("Label", proc() {
-                    ui_menu_clear()
-                    impos :[2]int= mouse_position()
-                    append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 4, 1, .Label})
-                    solve_build_queue()
-                })
-
-                ui_menu_add("Ping", proc() {
-                    ui_menu_clear()
-                    impos :[2]int= mouse_position()
-                    append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 3, 1, .Ping})
-                    solve_build_queue()
-                })
-
-                ui_menu_add("Conclusion", proc() {
-                    ui_menu_clear()
-                    impos :[2]int= mouse_position()
-                    append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 6, 1, .Conclusion})
-                    solve_build_queue()
-                })
-
-                ui_menu_add("Chain", proc() {
-                    ui_menu_clear()
-                    impos :[2]int= mouse_position()
-                    append(&gadget_list, (Gadget){impos.x / grid_size, impos.y / grid_size, 2, 1, .Chain})
-                    solve_build_queue()
-                })
-
+                ui_menu_clear()
+                ui_menu_add("Label", proc() { gadget_create_at_mouse(.Label) })
+                ui_menu_add("Ping", proc() { gadget_create_at_mouse(.Ping) })
+                ui_menu_add("Root", proc() { gadget_create_at_mouse(.Root) })
+                ui_menu_add("Chain", proc() { gadget_create_at_mouse(.Chain) })
+                ui_menu_add("Print", proc() { gadget_create_at_mouse(.Print) })
+                ui_menu_add("TextFile", proc() { gadget_create_at_mouse(.TextFile) })
+                ui_menu_add("ReverseText", proc() { gadget_create_at_mouse(.ReverseText) })
             })
 
             ui_menu_add("Toggle Grid", proc() {
@@ -104,7 +80,7 @@ init :: proc () {
             })
         }
 
-        if !rl.IsMouseButtonDown(.LEFT) {
+        if !rl.IsMouseButtonDown(.LEFT) && !rl.IsMouseButtonReleased(.LEFT) {
             mouse_type = .None
             selection_mousecheck()
             resize_mousecheck()

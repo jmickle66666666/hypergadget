@@ -5,17 +5,15 @@ import "core:slice"
 solve_queue :[dynamic]^Gadget
 
 solve_traverse :: proc() {
-    // step 1: find the conclusion gadget
-    // step 2: find the input gadget(s) for it
-    // step 3: add them all to a list/queue
-    // step 4: solve the newest added gadget on the queue
-    // step 5: which means do step 2 on it
+
 
     for len(solve_queue) > 0 {
         queue_index := len(solve_queue)-1
         solve_process_gadget(solve_queue[queue_index])
         ordered_remove(&solve_queue, queue_index)
     }
+
+    gadget_clean_output_memory()
 
     // we build the queue after any action that would change it
     // so it should be already built before we run the solver
@@ -25,10 +23,11 @@ solve_traverse :: proc() {
 
 solve_build_queue :: proc() {
     clear(&solve_queue)
-    conclusions := solve_find_gadgets_of_type(.Conclusion)
-    defer delete(conclusions)
-    for conclusion in conclusions {
-        append(&solve_queue, conclusion)
+    
+    roots := solve_find_gadgets_of_type(.Root)
+    defer delete(roots)
+    for root in roots {
+        append(&solve_queue, root)
     }
 
     for i:=0; i < len(solve_queue); i += 1 {
@@ -37,24 +36,36 @@ solve_build_queue :: proc() {
 }
 
 solve_traverse_gadget :: proc(queue_index:int) {
+
+    solve_do_input_count :: proc(gadget:^Gadget, count:int) {
+        inputs := solve_find_inputs(gadget)
+        defer delete(inputs)
+
+        cache := &gadget_cache[gadget.guid]
+        clear(&cache.inputs)
+
+        c := 0
+        for input in inputs {
+            append(&cache.inputs, input)
+            append(&solve_queue, input)
+            c += 1
+            if c >= count { break }
+        }
+    }
+
     gadget := solve_queue[queue_index]
     switch gadget.type {
         case .Label:
         case .Ping:
-        case .Conclusion:
-            inputs := solve_find_inputs(gadget)
-            defer delete(inputs)
-
-            for input in inputs {
-                append(&solve_queue, input)
-            }
+        case .Root:
+            solve_do_input_count(gadget, 9999)
         case .Chain:
-            inputs := solve_find_inputs(gadget)
-            defer delete(inputs)
-
-            for input in inputs {
-                append(&solve_queue, input)
-            }
+            solve_do_input_count(gadget, 1)
+        case .Print:
+            solve_do_input_count(gadget, 1)
+        case .ReverseText:
+            solve_do_input_count(gadget, 1)
+        case .TextFile: 
     }
 }
 
@@ -62,12 +73,19 @@ solve_process_gadget :: proc(gadget:^Gadget) {
     switch gadget.type {
         // gadgets that dont do anything
         case .Chain:
-        case .Conclusion:
+        case .Root:
         case .Label:
 
         // gadgets that do something
         case .Ping:
-            toast("Ping!")
+            process_ping()
+
+        case .Print:
+            process_print(gadget)
+        case .ReverseText:
+            process_reversetext(gadget)
+        case .TextFile:
+            process_textfile(gadget)
     }
 }
 
