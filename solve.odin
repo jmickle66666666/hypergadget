@@ -72,11 +72,12 @@ solve_traverse_gadget :: proc(queue_index:int) {
 solve_process_gadget :: proc(gadget:^Gadget) {
     switch gadget.type {
         // gadgets that dont do anything
-        case .Chain:
         case .Root:
         case .Label:
-
+                
         // gadgets that do something
+        case .Chain:
+            process_chain(gadget)
         case .Ping:
             process_ping()
 

@@ -4,15 +4,26 @@
 [ ] for some reason it all looks different on my laptop??? hate that
 [x] node guid
 [ ] file saving/loading/cleanup system
-[ ] gadget data
-[ ] string data
+[x] gadget data
+[x] string data
+[ ] image data
+[ ] 3d model data
+[ ] audio data
+[x] chain gadget pass through output
+[ ] chain gadget resizable vertical
+[ ] gadget inspector for setting data on them
 
 gadgets:
-[ ] print string
-[ ] reverse string
+[x] print string
+[x] reverse string
 [ ] random input gadget
 [ ] spark gadget: emits sparks when its hit
 [ ] transmute gadget
+[ ] write text file
+[ ] append/prepend string
+[ ] string constant
+[ ] string replace
+[ ] string repeat
 
 bugs:
 [x] release gadget drag while hovering over a resize thing cancels the move
