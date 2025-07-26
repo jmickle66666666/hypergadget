@@ -3,3 +3,5 @@
 [ ] spark gadget: emits sparks when its hit
 [x] traverse gadgets and like make them transparent if they're not doing anything
 [ ] for some reason it all looks different on my laptop??? hate that
+[ ] node guid for filepaths
+[ ] file saving/loading/cleanup system
