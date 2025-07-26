@@ -1,2 +1,2 @@
-window_x 354
-window_y 131
+window_x 2502
+window_y 288

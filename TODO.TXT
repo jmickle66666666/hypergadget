@@ -1,7 +1,15 @@
 [ ] redo gadget types to be loaded from json or smth
 [x] resizable gadgets
-[ ] spark gadget: emits sparks when its hit
 [x] traverse gadgets and like make them transparent if they're not doing anything
 [ ] for some reason it all looks different on my laptop??? hate that
 [ ] node guid for filepaths
 [ ] file saving/loading/cleanup system
+[ ] gadget data
+[ ] string data
+
+gadgets:
+[ ] print string
+[ ] reverse string
+[ ] random input gadget
+[ ] spark gadget: emits sparks when its hit
+[ ] transmute gadget
