@@ -66,6 +66,7 @@ solve_traverse_gadget :: proc(queue_index:int) {
         case .ReverseText:
             solve_do_input_count(gadget, 1)
         case .TextFile: 
+        case .Text: 
     }
 }
 
@@ -87,6 +88,8 @@ solve_process_gadget :: proc(gadget:^Gadget) {
             process_reversetext(gadget)
         case .TextFile:
             process_textfile(gadget)
+        case .Text:
+            process_text(gadget)
     }
 }
 

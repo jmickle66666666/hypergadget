@@ -39,6 +39,7 @@ GadgetType :: enum {
     Print,
     TextFile,
     ReverseText,
+    Text,
 }
 
 gadget_type_name :: proc(type:GadgetType) -> string {
@@ -50,6 +51,7 @@ gadget_type_name :: proc(type:GadgetType) -> string {
         case .Print: return "Print"
         case .TextFile: return "Text File"
         case .ReverseText: return "Reverse Text"
+        case .Text: return "Text"
     }
     return "!NOTHING!"
 }
@@ -64,6 +66,7 @@ gadget_type_color :: proc(type:GadgetType) -> rl.Color {
         case .Print: return rl.WHITE
         case .TextFile: return rl.PINK
         case .ReverseText: return rl.YELLOW
+        case .Text: return rl.PINK
     }
     return rl.GRAY
 }
@@ -84,13 +87,18 @@ gadget_get_guid :: proc() -> u32 {
 }
 
 gadget_create :: proc(x:int, y:int, type:GadgetType) -> ^Gadget {
+    guid := gadget_get_guid()
     width := 4
     output_type :GadgetOutputType= .Nothing
     switch type {
         case .Print:
+        case .Text:
+            map_insert(&config_text_map, guid, (Config_Text){})
+            output_type = .String
         case .ReverseText:
             output_type = .String
         case .TextFile:
+            map_insert(&config_textfile_map, guid, (Config_TextFile){})
             output_type = .String
         case .Label:
         case .Ping:
@@ -100,7 +108,7 @@ gadget_create :: proc(x:int, y:int, type:GadgetType) -> ^Gadget {
         case .Chain:
             width = 2
     }
-    new_gadget :Gadget= {x, y, width, 1, type, gadget_get_guid()}
+    new_gadget :Gadget= {x, y, width, 1, type, guid}
     append(&gadget_list, new_gadget)
     cache_data :GadgetCacheData= {
         &gadget_list[len(gadget_list)-1],

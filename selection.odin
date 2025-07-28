@@ -64,7 +64,7 @@ selection_update :: proc() {
         selection_move = impos - selection_click_start
     }
 
-    if rl.IsMouseButtonReleased(.LEFT) {
+    if rl.IsMouseButtonReleased(.LEFT) && !inspector_hovering() {
         if selection_drawing_box {
             if !rl.IsKeyDown(.LEFT_SHIFT) { clear(&selection) }
 

@@ -12,9 +12,10 @@ process_print :: proc(gadget:^Gadget) {
 }
 
 // textfile
-Data_TextFile :: struct {
+Config_TextFile :: struct {
     path: string
 }
+config_textfile_map :map[u32]Config_TextFile
 
 process_textfile :: proc(gadget:^Gadget) {
     // just do a test thing for now
@@ -24,8 +25,6 @@ process_textfile :: proc(gadget:^Gadget) {
     output := new(OutputString)
     output.text = string(read)
     cache.output = output
-
-    // TODO: memory
 }
 
 // reverse text
@@ -38,4 +37,18 @@ process_reversetext :: proc(gadget:^Gadget) {
     cache.output = output
 
     // TODO: memory
+}
+
+// text
+Config_Text :: struct {
+    text: string
+}
+config_text_map :map[u32]Config_Text
+
+process_text :: proc(gadget:^Gadget) {
+    config := config_text_map[gadget.guid]
+    cache:=&gadget_cache[gadget.guid]
+    output := new(OutputString)
+    output.text = string(config.text)
+    cache.output = output
 }

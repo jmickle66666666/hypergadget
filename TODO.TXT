@@ -12,6 +12,9 @@
 [x] chain gadget pass through output
 [ ] chain gadget resizable vertical
 [ ] gadget inspector for setting data on them
+[ ] delete data when deleting gadget
+[ ] textbox implementation
+[ ] floating labels when inputs are expected
 
 gadgets:
 [x] print string

@@ -68,6 +68,7 @@ init :: proc () {
                 ui_menu_add("Print", proc() { gadget_create_at_mouse(.Print) })
                 ui_menu_add("TextFile", proc() { gadget_create_at_mouse(.TextFile) })
                 ui_menu_add("ReverseText", proc() { gadget_create_at_mouse(.ReverseText) })
+                ui_menu_add("Text", proc() { gadget_create_at_mouse(.Text) })
             })
 
             ui_menu_add("Toggle Grid", proc() {
@@ -90,6 +91,7 @@ init :: proc () {
         selection_update()
         resize_update()
         render()
+        inspector_draw()
         ui_render()
         debug_update()
         debug_draw()
